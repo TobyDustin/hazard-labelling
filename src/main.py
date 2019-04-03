@@ -9,7 +9,7 @@ import argparse
 parser = argparse.ArgumentParser(description='Hazard video labelling tool')
 parser.add_argument('--filepath', metavar='file(s)', type=str, nargs='+', default=None,
 help='filepath(s) of videos to be analysed (provide absolute paths)')
-parser.add_argument('--folder', metavar='folder', type=str, default=None,
+parser.add_argument('--folder', metavar='folder', type=str, default='../../test/',
 help='path to folder containing videos (provide absolute path)')
 parser.add_argument('--dest', metavar='destination', type=str, nargs=1, default='.',
 help='path to desired output destination (default: where this script is)')
@@ -95,6 +95,7 @@ class VideoWindow(BaseWidget):
         self._player.process_frame_event = self.__processFrame
         self._player.click_event = self.__clickEvent
         self._player.key_release_event = self.__tagEvent
+        self._timeline.pointer_changed_event = self.__pointerChangeEvent
 
         #Define the organization of the Form Controls
         self._formset = [
@@ -207,6 +208,13 @@ class VideoWindow(BaseWidget):
 
     def __updateStatus(self, msg):
         self._status.value = str(msg)
+
+    def __pointerChangeEvent(self):
+        pointerValue = self._timeline.value
+        self._player.video_index = pointerValue
+        self._player.refresh()
+
+
 
 
 if __name__ == '__main__':
